@@ -72,7 +72,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate Called")
         setContent {
-            
+            //Test
             DessertClickerTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
