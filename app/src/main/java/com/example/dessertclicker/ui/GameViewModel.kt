@@ -7,7 +7,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.dessertclicker.data.DESSERT_INCREASE
 import com.example.dessertclicker.data.Datasource.dessertList
-import com.example.dessertclicker.data.SCORE_INCREASE
 import com.example.dessertclicker.model.Dessert
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,16 +16,14 @@ class GameViewModel: ViewModel() {
     private var _uiState = MutableStateFlow(GameUiState())
     val uiState: StateFlow<GameUiState> = _uiState
 
-    var userImput by mutableStateOf(0)
-        private set
-
     fun OnDessertClick() {
+        val desserts = dessertList
         val updateDessertsSold = _uiState.value.dessertsSold.plus(DESSERT_INCREASE)
-        val updateRevenue = _uiState.value.revenue.plus(SCORE_INCREASE)
+        val updateRevenue = DetermineDessertToShow()
         UpdateGameState(updateDessertsSold, updateRevenue)
     }
 
-    fun DetermineDessertToShow() {
+    fun DetermineDessertToShow(): Dessert {
         val desserts = dessertList
         val dessertsSold = _uiState.value.dessertsSold
         var dessertToShow = desserts.first()
@@ -41,23 +38,18 @@ class GameViewModel: ViewModel() {
                     break
                 }
             }
-        updateDessert(dessertToShow)
+        return dessertToShow
     }
 
-    fun UpdateGameState(updateDessertSold: Int, updateRevenue: Int) {
+    fun UpdateGameState(updateDessertSold: Int, updateDessert: Dessert) {
+        val dessertRevenue = _uiState.value.revenue.plus(updateDessert.price)
         _uiState.update { currentState ->
             currentState.copy(
                 dessertsSold = updateDessertSold,
-                revenue = updateRevenue
-            )
-        }
-    }
-    fun updateDessert(dessert: Dessert) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                currentDessertIndex = dessert.startProductionAmount,
-                currentDessertPrice = dessert.price,
-                currentDessertImageId = dessert.imageId
+                revenue = dessertRevenue,
+                currentDessertIndex = updateDessert.startProductionAmount,
+                currentDessertPrice = updateDessert.price,
+                currentDessertImageId = updateDessert.imageId
             )
         }
     }
