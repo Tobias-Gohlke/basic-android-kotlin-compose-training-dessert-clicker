@@ -19,6 +19,8 @@ package com.example.dessertclicker.data
 import com.example.dessertclicker.R
 import com.example.dessertclicker.model.Dessert
 
+const val SCORE_INCREASE = 1
+const val DESSERT_INCREASE = 10
 /**
  * [Datasource] generates a list of [Dessert]
  */
